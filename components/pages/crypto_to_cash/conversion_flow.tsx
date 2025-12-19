@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DropdownMenu } from "../../reuseable/dropdown_menu";
 import { Button } from "../../reuseable/button";
 import { validateCryptoToCash } from "@/components/utils/validation";
@@ -8,9 +8,9 @@ import { convertCurrency } from "@/components/utils/conversion.helper";
 import {
   currencies,
   payFromOptions,
+  receiveCurrencies,
   wallets
 } from "@/components/utils/constant";
-import { FiChevronDown } from "react-icons/fi";
 import { useCryptoToCashStore } from "@/components/store/crypto_to_cash.store";
 
 export const ConversionFlow = ({ onNext }: { onNext: () => void }) => {
@@ -29,11 +29,16 @@ export const ConversionFlow = ({ onNext }: { onNext: () => void }) => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  useEffect(() => {
+    if (!receiveCurrencyCode) setReceiveCurrencyCode("NGN");
+  }, [receiveCurrencyCode, setReceiveCurrencyCode]);
+
   const payCurrency =
     currencies.find((c) => c.code === payCurrencyCode) ?? currencies[0];
 
   const receiveCurrency =
-    currencies.find((c) => c.code === receiveCurrencyCode) ?? currencies[1];
+    receiveCurrencies.find((c) => c.code === receiveCurrencyCode) ??
+    receiveCurrencies[4]; 
 
   const receiveAmount = convertCurrency(
     payAmount,
@@ -79,7 +84,6 @@ export const ConversionFlow = ({ onNext }: { onNext: () => void }) => {
             onChange={(e) => setPayAmount(e.target.value)}
             className="text-2xl! font-semibold outline-none border-none text-foreground! w-7/10"
           />
-
           <DropdownMenu
             items={currencies.map((c) => ({
               label: c.label,
@@ -112,9 +116,8 @@ export const ConversionFlow = ({ onNext }: { onNext: () => void }) => {
             disabled
             className="flex-1 text-2xl! font-semibold outline-none border-none text-foreground! bg-transparent cursor-not-allowed w-7/10"
           />
-
           <DropdownMenu
-            items={currencies.map((c) => ({
+            items={receiveCurrencies.map((c) => ({
               label: c.label,
               icon: c.icon,
               onClick: () => setReceiveCurrencyCode(c.code)
