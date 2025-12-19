@@ -28,19 +28,8 @@ pnpm start
 
 If you prefer npm or yarn, replace pnpm with npm or yarn in the commands above.
 
-## Suggested folder structure
+## Folder structure
 
-<<<<<<< HEAD
-/components 
-
-  /pages # Next.js pages
-  
-  /store # zustand store
-  
-  /reusable # small, focused UI components
-  
-  /utils # mock data, helpers
-=======
 /components
 
 /pages # Next.js pages
